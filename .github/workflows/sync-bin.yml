@@ -1,0 +1,63 @@
+name: sync bin
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches:
+      - feature/mirror_bin
+
+jobs:
+  sync_bin_mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout dapr-bin-mirror
+        uses: actions/checkout@v2
+        with:
+          repository: dapr-cn/dapr-bin-mirror
+          ref: main
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: installer
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+      - name: Init Pipenv CLI
+        run: |
+          export PATH=/home/runner/.local/bin/:$PATH
+          cd installer/src
+          pip install --upgrade pip
+          pip install pipenv
+          pipenv install
+
+      - name: Sync CLI
+        run: |
+          cd installer/src
+          pipenv run inv sync-cli --base-dir="../../"
+      - name: Sync Runtime
+        run: |
+          cd installer/src
+          pipenv run inv sync-runtime --base-dir="../../"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.PAT_TO_DAPR_BIN_MIRROR }}
+          commit-message: Update Releases
+          committer: dapr-cn <dapr-cn@hotmail.com>
+          signoff: false
+          delete-branch: true
+          title: "Update content"
+          labels: |
+            release update
+            automated pr
+          team-reviewers: |
+            owners
+            maintainers
+          assignees: |
+            newbe36524
+          reviewers: |
+            newbe36524
