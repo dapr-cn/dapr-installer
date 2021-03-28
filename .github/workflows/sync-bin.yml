@@ -8,7 +8,7 @@ on:
       - feature/mirror_bin
 
 jobs:
-  delpoy_github:
+  sync_bin_mirror:
     runs-on: ubuntu-latest
 
     steps:
