@@ -15,11 +15,12 @@ jobs:
       #        with:
       #          repository: dapr/docs-zh
       #          ref: v1.0_content
-      - name: Checkout content
+      - name: Checkout
         uses: actions/checkout@v2
-      - name: Copy content
+      - name: Download CLI
         run: |
           cd src
+          pip install pipenv
           pipenv install
           pipenv run inv sync-cli
 
