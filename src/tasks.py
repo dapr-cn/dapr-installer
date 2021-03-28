@@ -22,24 +22,25 @@ def download_releases(base_dir, repo, target_dir):
 
     logger.info(f"{release_json_path} downloaded")
     for tag in tags:
-        tag_dir = f"{asset_dir}/{tag['tag_name']}"
-        if not os.path.exists(tag_dir):
-            os.makedirs(tag_dir)
-        for asset in tag['assets']:
-            asset_path = f"{tag_dir}/{asset['name']}"
-            if not os.path.exists(asset_path):
-                download_url = asset['browser_download_url']
-                logger.info(f"start to request {download_url}")
-                urllib.request.urlretrieve(download_url, filename=asset_path)
-            else:
-                logger.debug(f"skip to download {asset_path}")
+        if not tag['prerelease']:
+            tag_dir = f"{asset_dir}/{tag['tag_name']}"
+            if not os.path.exists(tag_dir):
+                os.makedirs(tag_dir)
+            for asset in tag['assets']:
+                asset_path = f"{tag_dir}/{asset['name']}"
+                if not os.path.exists(asset_path):
+                    download_url = asset['browser_download_url']
+                    logger.info(f"start to request {download_url}")
+                    urllib.request.urlretrieve(download_url, filename=asset_path)
+                else:
+                    logger.debug(f"skip to download {asset_path}")
 
 
 @task
-def sync_cli(c, base_dir):
+def sync_cli(c, base_dir=None):
     download_releases(base_dir, "dapr/cli", "cli")
 
 
 @task
-def sync_runtime(c, base_dir):
+def sync_runtime(c, base_dir=None):
     download_releases(base_dir, "dapr/dapr", "dapr")
