@@ -20,8 +20,9 @@ def download_releases(base_dir, repo, target_dir):
     with open(release_json_path) as json_file:
         tags = json.load(json_file)
 
+    logger.info(f"{release_json_path} downloaded")
     for tag in tags:
-        tag_dir = f"{base_dir}/{tag['tag_name']}"
+        tag_dir = f"{asset_dir}/{tag['tag_name']}"
         if not os.path.exists(tag_dir):
             os.makedirs(tag_dir)
         for asset in tag['assets']:
