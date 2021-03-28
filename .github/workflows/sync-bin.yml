@@ -20,6 +20,7 @@ jobs:
       - name: Download CLI
         run: |
           cd src
+          pip install --upgrade pip
           pip install pipenv
           pipenv install
           pipenv run inv sync-cli
