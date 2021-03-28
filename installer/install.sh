@@ -94,7 +94,12 @@ checkExistingDapr() {
 }
 
 getLatestRelease() {
+    local RELEASE_JSON = $2
     local daprReleaseUrl="https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/releases"
+    if [ $RELEASE_JSON ]; then
+        daprReleaseUrl=$RELEASE_JSON
+    fi
+
     local latest_release=""
 
     if [ "$DAPR_HTTP_REQUEST_CLI" == "curl" ]; then
@@ -110,7 +115,11 @@ downloadFile() {
     LATEST_RELEASE_TAG=$1
 
     DAPR_CLI_ARTIFACT="${DAPR_CLI_FILENAME}_${OS}_${ARCH}.tar.gz"
-    DOWNLOAD_BASE="https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/releases/download"
+    DOWNLOAD_BASE = $3
+    if [ ! $DOWNLOAD_BASE ]; then
+        DOWNLOAD_BASE="https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/releases/download"
+    fi
+
     DOWNLOAD_URL="${DOWNLOAD_BASE}/${LATEST_RELEASE_TAG}/${DAPR_CLI_ARTIFACT}"
 
     # Create the temp directory

@@ -4,14 +4,27 @@
 
 ### Get the latest stable version
 
-```
-powershell -Command "iwr -useb https://raw.githubusercontent.com/dapr/cli/master/install/install.ps1 | iex"
+```powershell
+$params = @{
+  CustomAssetPrefix = 'https://ghproxy.com/https://github.com/dapr/cli/releases/download'
+  DaprReleaseJson = 'https://gitee.com/dapr-cn/dapr-bin-mirror/raw/main/cli/releases.json';
+}
+$script=iwr -useb https://cdn.jsdelivr.net/gh/dapr-cn/dapr-installer/installer/install.ps1;
+$block=[ScriptBlock]::Create(".{$script} $(&{$args} @params)");
+Invoke-Command -ScriptBlock $block
 ```
 
 ### Get the specific version
 
-```
-powershell -Command "$script=iwr -useb https://raw.githubusercontent.com/dapr/cli/master/install/install.ps1; $block=[ScriptBlock]::Create($script); invoke-command -ScriptBlock $block -ArgumentList <Version>"
+```powershell
+$params = @{
+  CustomAssetPrefix = "https://ghproxy.com/https://github.com/dapr/cli/releases/download";
+  DaprReleaseJson = "https://gitee.com/dapr-cn/dapr-bin-mirror/raw/main/cli/releases.json";
+  Version = <Version>
+}
+$script=iwr -useb https://cdn.jsdelivr.net/gh/dapr-cn/dapr-installer/installer/install.ps1;
+$block=[ScriptBlock]::Create(".{$script} $(&{$args} @params)");
+Invoke-Command -ScriptBlock $block
 ```
 
 ## MacOS
