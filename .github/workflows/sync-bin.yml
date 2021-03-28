@@ -1,6 +1,8 @@
 name: sync bin
 
 on:
+  schedule:
+    - cron: "0 0 * * *"
   push:
     branches:
       - feature/mirror_bin
@@ -10,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout docs_zh
+      - name: Checkout dapr-bin-mirror
         uses: actions/checkout@v2
         with:
           repository: dapr-cn/dapr-bin-mirror
@@ -44,7 +46,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT_TO_DAPR_BIN_MIRROR }}
-          commit-message: Update content
+          commit-message: Update Releases
           committer: dapr-cn <dapr-cn@hotmail.com>
           signoff: false
           delete-branch: true
@@ -55,3 +57,7 @@ jobs:
           team-reviewers: |
             owners
             maintainers
+          assignees: |
+            newbe36524
+          reviewers: |
+            newbe36524
