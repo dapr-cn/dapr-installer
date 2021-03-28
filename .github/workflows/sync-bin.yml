@@ -34,11 +34,11 @@ jobs:
       - name: Sync CLI
         run: |
           cd installer/src
-          pipenv run inv sync-cli --base_dir="../../"
+          pipenv run inv sync-cli --base-dir="../../"
       - name: Sync Runtime
         run: |
           cd installer/src
-          pipenv run inv sync-runtime --base_dir="../../"
+          pipenv run inv sync-runtime --base-dir="../../"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
