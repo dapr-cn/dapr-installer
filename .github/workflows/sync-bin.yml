@@ -1,8 +1,6 @@
 name: sync bin
 
 on:
-  schedule:
-    - cron: "0 0 * * *"
   push:
     branches:
       - feature/mirror_bin
